@@ -44,3 +44,14 @@ Evidence over prediction. Missing data stays missing. Catalyst headlines require
 6. Add authenticated user-specific settings and audit logging.
 
 This repository is an analysis infrastructure project, not an execution or order-routing system.
+
+## Deploy to Vercel
+
+1. Import this repository in Vercel.
+2. Keep framework preset as **Next.js**.
+3. Add environment variable: `ALPHA_VANTAGE_API_KEY`.
+4. Deploy.
+
+After deployment, your MCP endpoint is:
+
+`https://<your-vercel-domain>/api/mcp`
