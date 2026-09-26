@@ -6,8 +6,27 @@ import { classifyCatalyst } from "@/src/engine/catalyst";
 import { readStructure } from "@/src/engine/structure";
 import { fetchIntraday } from "@/src/providers/alpha-vantage";
 import { scanHistoricalPatterns } from "@/src/engine/patterns";
+import { fetchTopGainersLosers } from "@/src/providers/market-movers";
+import { rankCandidates } from "@/src/engine/scanner";
 
 const handler = createMcpHandler((server) => {
+  server.tool("puck_market_scan", "Turn ChatGPT into a live market scanner. Pull current top gainers/active names, apply the user\'s price/change/volume filters, and rank candidates for deeper evidence checks.", {
+    minPrice: z.number().min(0).default(0.01),
+    maxPrice: z.number().min(0).default(3.99),
+    minChangePct: z.number().default(10),
+    minVolume: z.number().min(0).default(100000),
+    limit: z.number().int().min(1).max(20).default(8)
+  }, async ({ minPrice, maxPrice, minChangePct, minVolume, limit }) => {
+    const movers = await fetchTopGainersLosers();
+    const candidates = rankCandidates(movers, { minPrice, maxPrice, minChangePct, minVolume, limit });
+    return { content: [{ type: "text", text: JSON.stringify({
+      source: "Alpha Vantage TOP_GAINERS_LOSERS",
+      filters: { minPrice, maxPrice, minChangePct, minVolume },
+      candidates,
+      next_step: "Run puck_check_symbol, puck_catalyst_check, puck_historical_pattern_scan, and puck_structure_check on the strongest candidates before drawing conclusions."
+    }, null, 2) }] };
+  });
+
   server.tool("puck_check_symbol", "Evidence-first small-cap momentum setup check. Missing data remains missing.", {
     symbol: z.string(), price: z.number().optional(), changePct: z.number().optional(), volume: z.number().optional(), relativeVolume: z.number().optional(), spreadPct: z.number().optional(), speed: z.number().optional(), buyerControl: z.number().optional(), support: z.number().optional(), resistance: z.number().optional(), floatShares: z.number().optional()
   }, async (input) => ({ content: [{ type: "text", text: JSON.stringify(buildEvidence(input as never), null, 2) }] }));
