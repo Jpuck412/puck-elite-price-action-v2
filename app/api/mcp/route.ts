@@ -9,6 +9,8 @@ import { scanHistoricalPatterns } from "@/src/engine/patterns";
 import { fetchTopGainersLosers } from "@/src/providers/market-movers";
 import { rankCandidates } from "@/src/engine/scanner";
 
+export const maxDuration = 60;
+
 const handler = createMcpHandler((server) => {
   server.tool("puck_market_scan", "Turn ChatGPT into a live market scanner. Pull current top gainers/active names, apply the user\'s price/change/volume filters, and rank candidates for deeper evidence checks.", {
     minPrice: z.number().min(0).default(0.01),
@@ -50,6 +52,6 @@ const handler = createMcpHandler((server) => {
   server.tool("puck_structure_check", "Read support, resistance and float context without inventing missing values.", {
     price: z.number().optional(), support: z.number().optional(), resistance: z.number().optional(), floatShares: z.number().optional()
   }, async ({ price, support, resistance, floatShares }) => ({ content: [{ type: "text", text: JSON.stringify(readStructure(price, support, resistance, floatShares), null, 2) }] }));
-}, { maxDuration: 60 });
+});
 
 export { handler as GET, handler as POST, handler as DELETE };
