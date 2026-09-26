@@ -1,0 +1,1 @@
+{"schema_version":"1.0","name":"puck-elite-price-action-v2","display_name":"Puck Elite Price Action V2","description":"Professional evidence-first MCP command center for small-cap momentum analysis.","version":"2.0.0","mcp_endpoint":"/api/mcp","capabilities":["market-evidence","catalyst-analysis","structure-analysis","risk-planning"]}
