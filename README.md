@@ -14,6 +14,8 @@ V2 separates the reasoning engine from external providers so live data can be at
 
 ## Tools
 
+- puck_market_scan — turns the MCP server into a live market scanner by pulling current top gainers/active names and filtering/ranking them by price, percentage change, and volume.
+
 - `puck_check_symbol` — pressure, volume, speed, spread, buyer control, support and structure evidence.
 - `puck_risk_plan` — defined invalidation and maximum-dollar-risk sizing.
 - `puck_catalyst_check` — catalyst classification and source/dilution verification flags.
