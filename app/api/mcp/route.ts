@@ -42,7 +42,7 @@ const handler = createMcpHandler((server) => {
   }, async ({ headline }) => ({ content: [{ type: "text", text: JSON.stringify(classifyCatalyst(headline), null, 2) }] }));
 
   server.tool("puck_historical_pattern_scan", "Compare the current intraday price/volume shape against historical windows and show what those prior setups looked like and what happened afterward.", {
-    symbol: z.string(), interval: z.enum(["1min","5min","15min","30min","60min"]).default("5min"), month: z.string().regex(/^\\d{4}-\\d{2}$/).optional(), windowBars: z.number().int().min(6).max(60).default(12), forwardBars: z.number().int().min(3).max(60).default(12), topN: z.number().int().min(3).max(20).default(8)
+    symbol: z.string(), interval: z.enum(["1min","5min","15min","30min","60min"]).default("5min"), month: z.string().regex(/^\d{4}-\d{2}$/).optional(), windowBars: z.number().int().min(6).max(60).default(12), forwardBars: z.number().int().min(3).max(60).default(12), topN: z.number().int().min(3).max(20).default(8)
   }, async ({ symbol, interval, month, windowBars, forwardBars, topN }) => {
     const bars = await fetchIntraday(symbol, interval, month, "full");
     const result = scanHistoricalPatterns(bars, windowBars, forwardBars, topN);
