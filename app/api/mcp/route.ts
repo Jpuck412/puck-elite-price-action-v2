@@ -52,6 +52,6 @@ const handler = createMcpHandler((server) => {
   server.tool("puck_structure_check", "Read support, resistance and float context without inventing missing values.", {
     price: z.number().optional(), support: z.number().optional(), resistance: z.number().optional(), floatShares: z.number().optional()
   }, async ({ price, support, resistance, floatShares }) => ({ content: [{ type: "text", text: JSON.stringify(readStructure(price, support, resistance, floatShares), null, 2) }] }));
-});
+}, {}, { basePath: "/api", maxDuration: 60, verboseLogs: true });
 
 export { handler as GET, handler as POST, handler as DELETE };
